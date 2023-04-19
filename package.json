@@ -1,0 +1,17 @@
+{
+  "dependencies": {
+    "@mozilla/readability": "^0.4.4",
+    "jsdom": "^20.0.2",
+    "turndown": "^7.1.2"
+  },
+  "name": "html-to-markdown",
+  "description": "",
+  "version": "0.1.0",
+  "main": "automationWorkflow.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Russ Fugal",
+  "license": "MIT"
+}

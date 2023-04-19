@@ -1,23 +1,26 @@
-In this document, we will outline an automation workflow in Node.js using the `node-fetch`, `mozilla-readability`, `jsdom`, and `showdown` libraries. The workflow will consist of the following steps:
+>document an automation workflow in nodejs from fetch(url) through mozilla / readability through mixmark-io / turndown
+
+In this document, we will outline an automation workflow in Node.js using the `mozilla-readability`, `jsdom`, and `turndown` libraries. The workflow will consist of the following steps:
 
 1. Fetch the content of a given URL
 2. Extract the main readable content using Mozilla's Readability library
-3. Convert the extracted content to Markdown using ShowdownJS
+3. Convert the extracted content to Markdown using Turndown
 
 First, ensure you have Node.js installed and the required packages installed using npm:
 
 ```
-npm install node-fetch mozilla-readability jsdom showdown
+npm install @mozilla/readability
+npm install turndown
 ```
 
 Now, let's create a script called automationWorkflow.js and follow these steps:
     
 1. Import the required libraries:
     ```
-    const fetch = require('node-fetch');
-    const { Readability } = require('mozilla-readability');
+    const { Readability } = require('@mozilla/readability');
     const { JSDOM } = require('jsdom');
-    const Showdown = require('showdown');
+    const TurndownService = require('turndown');
+    const fs = require('fs').promises;
     ```
     
 2. Create a function to fetch the content of a given URL:
@@ -35,9 +38,9 @@ Now, let's create a script called automationWorkflow.js and follow these steps:
     
 3. Create a function to extract the main readable content using Mozilla's Readability library:
     ```
-    function extractReadableContent(html) {
+    function extractReadableContent(html, url) {
       try {
-        const dom = new JSDOM(html);
+        const dom = new JSDOM(html, url);
         const reader = new Readability(dom.window.document);
         const article = reader.parse();
         return article;
@@ -51,8 +54,8 @@ Now, let's create a script called automationWorkflow.js and follow these steps:
     ```
     function convertToMarkdown(html) {
       try {
-        const converter = new Showdown.Converter();
-        const markdown = converter.makeMarkdown(html);
+        const turndownService = new TurndownService();
+        const markdown = turndownService.turndown(html);
         return markdown;
       } catch (error) {
         console.error(`Error converting HTML to Markdown: ${error}`);
@@ -64,7 +67,7 @@ Now, let's create a script called automationWorkflow.js and follow these steps:
     ```
     async function runWorkflow(url) {
       const html = await fetchURLContent(url);
-      const article = extractReadableContent(html);
+      const article = extractReadableContent(html, url);
       if (article) {
         const markdown = convertToMarkdown(article.content);
         console.log(markdown);
